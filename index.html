@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
     <title>Наша история | Печатное письмо с видео</title>
     <style>
+        /* Глобальное скрытие всех скроллбаров */
         * {
             margin: 0;
             padding: 0;
@@ -12,7 +13,16 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* ===== ФОН ИЗ ВАШЕЙ ФОТОГРАФИИ (bg.jpg) ===== */
+        /* Убираем полосы прокрутки во всех браузерах */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        * {
+            -ms-overflow-style: none;  /* IE и Edge */
+            scrollbar-width: none;     /* Firefox */
+        }
+
+        /* Фон – фиксированный, без анимации, не двигается */
         body {
             background: url("bg.jpg") no-repeat center center fixed;
             background-size: cover;
@@ -20,6 +30,7 @@
             color: #e2e8f0;
             padding: 20px;
             min-height: 100vh;
+            /* убираем transition, чтобы фон не анимировался */
         }
 
         .container {
@@ -117,7 +128,6 @@
 </div>
 
 <script>
-    // ---------- ТЕКСТ ПИСЬМА ----------
     const firstPart = `Валерия, моя маленькая принцесса…
 
 Я хочу, чтобы ты сейчас забыла обо всём и просто вспомнила. Вспомнила нас. Ту историю, которая началась в прекрасном сентябре 2022 года.`;
@@ -165,9 +175,7 @@
 
 Твой любимый Михаил.`;
 
-    // Имя видеофайла (лежит в корне репозитория)
     const videoURL = "photo_5440447224761928166_y_merged_watermarkless_compressed.mp4";
-
     const storyContainer = document.getElementById('storyContainer');
     let typingInterval = null;
 
