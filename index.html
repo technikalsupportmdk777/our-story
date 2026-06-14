@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>Наша история | Печатное письмо с видео</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: radial-gradient(ellipse at 30% 40%, #1e1f2a, #030308);
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            color: #e2e8f0;
+            padding: 20px;
+            min-height: 100vh;
+            transition: background 0.2s;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .title-block {
+            background: rgba(18, 22, 28, 0.8);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 18px 20px;
+            margin-bottom: 24px;
+            text-align: center;
+            border: 1px solid rgba(100, 110, 130, 0.4);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        .typewriter-title {
+            font-family: 'Courier New', 'Fira Code', 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #d6dce8;
+            letter-spacing: 1px;
+            display: inline-block;
+            min-height: 3rem;
+        }
+
+        .main-text {
+            background: rgba(18, 22, 28, 0.7);
+            backdrop-filter: blur(8px);
+            border-radius: 32px;
+            padding: 28px 24px;
+            margin: 20px 0;
+            border: 1px solid rgba(100, 110, 130, 0.3);
+            font-family: 'Courier New', 'Fira Code', monospace;
+            font-size: 1rem;
+            line-height: 1.65;
+            color: #e2e8f0;
+            white-space: pre-wrap;
+        }
+
+        .video-wrapper {
+            margin: 30px 0;
+            background: #0f111a;
+            border-radius: 28px;
+            overflow: hidden;
+            border: 1px solid #3a3f50;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        video {
+            width: 100%;
+            display: block;
+            outline: none;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 0.7rem;
+            opacity: 0.6;
+            font-family: monospace;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            background-color: #c0c5ce;
+            margin-left: 2px;
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+            height: 1.2rem;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Кнопка смены фона */
+        .bg-changer {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #2d3345;
+            border: 1px solid #5a6070;
+            padding: 8px 16px;
+            border-radius: 60px;
+            color: white;
+            font-family: monospace;
+            cursor: pointer;
+            z-index: 1000;
+            transition: 0.1s;
+        }
+        .bg-changer:active {
+            transform: scale(0.96);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="title-block">
+        <div id="greeting" class="typewriter-title"></div>
+    </div>
+
+    <div id="textContainer" class="main-text"></div>
+
+    <div class="footer">💖 Текст печатается на твоих глазах, а видео — наша история</div>
+</div>
+
+<!-- Кнопка для смены фона -->
+<button id="changeBgBtn" class="bg-changer">🎨 Сменить фон</button>
+<input type="file" id="bgFileInput" accept="image/*" style="display: none;">
+
+<script>
+    // ---------- ТЕКСТ ПИСЬМА (РАЗБИТ НА ДВЕ ЧАСТИ) ----------
+    const firstPart = `Валерия, моя маленькая принцесса…
+
+Я хочу, чтобы ты сейчас забыла обо всём и просто вспомнила. Вспомнила нас. Ту историю, которая началась в прекрасном сентябре 2022 года.`;
+
+    const secondPart = `Мы познакомились в самые трудные для меня дни — между 7 и 12 сентября. А 16 сентября случилось нечто важное: наша первая встреча. Тогда я занимался перекупскими делами, и в тот день в мой гараж забежал котёнок… и накакал. Я рассердился и выкинул его в гараж. А ты подошла и как врезала мне! Знаешь, до сих пор не понимаю, почему я ничего не ответил. Наверное, потому что в тот миг внутри что-то щёлкнуло. Я понял: ты — именно та, кто мне нужен. Я впервые посмотрел на тебя по-настоящему.
+
+Помнишь, как мы стояли у машины, прячась ото всех? С каким страхом я хотел тебя поцеловать? Внутри всё тряслось: «А вдруг не так?» Но я поцеловал — и бабочки ожили. Мы провели чудный вечер, катались, а потом чуть не задавили бабку на машине — вот это был тот ещё п*здец, ха-ха! Смешно и страшно одновременно.
+
+Октябрь. Мой приезд.
+Мы катались, закупали шашлыки. И ты сказала Егору хватит использовать и разводить на деньги мишу. Тогда мы взяли всё для шашлыков и поехали на Северный. До этого я лез в твои трусики, а ты шептала: «Ну зай, блин, тут люди… что ты делаешь?..»
+
+Мы приехали, пошли с тобой разговаривать, целовались, пока остальные готовили. Я снова полез к тебе, и ты вдруг сказала: «Я готова попробовать». Я помню твой страх, и мой тоже — до жути. В итоге мы попробовали, тебе было больно, а я… я пожалел. Ты стала первой, кого я пожалел. Потом мы вышли из дома, я всё спрашивал: «Всё хорошо?» — боялся, что всё испортил. Мы пили, веселились, а мне так не хотелось тебя отпускать…
+
+На следующий день мы поехали на квартиру, чтобы продолжить то, что не закончили. Была кровь, смех, снова страх… Но это был, наверное, лучший день для нас обоих. А потом — просто дни, полные тик-тока, смеха, объятий. Ты стала моими каждыми выходными.
+
+А помнишь?
+Когда я не успел на поезд, задержался, а ты расстроилась и заплакала? Я вызвал такси и помчался к тебе в Спасск. Разве я делал это для кого-то? Нет. Только для тебя.
+
+Ноябрь пролетел в постоянных встречах. А потом наступил тот день — 30-31 декабря.
+
+Знакомство с твоими родителями. Я купил всё, что нужно, и ждал этого вечера как каторги. Выпил успокоительное, сел в такси и поехал. До сих пор помню, как искал твои любимые белые тюльпаны зимой — их нигде не было, но я нашёл. А ещё купил розы для бабушки и мамы и заехал за коньяком. Было реально страшно. Но меня сразу полюбили. Разве это не чудо?
+
+Потом я хотел забрать тебя, но не отпустили. И в тот же день ты так зарядила мне по яйцам… Ох, было больно, но тебе всегда всё можно было.
+
+Новый год. Я приехал вечером, мы веселились, встретили его вместе. И оба загадали одно желание: не потерять друг друга. Это были самые незабываемые дни.
+
+Потом Надя Яшина учила нас жизни и тому, как предохраняться… Тогда я знатно нах*ярился, а ты сидела и ждала, пока я проснусь. И в тот раз у нас получился наш первенец, но, увы… Бог забрал.
+
+А помнишь, когда меня положили в психушку? Как ты меня ждала? (Ты, конечно, гуляла там с другими, пока я лежал, но ничего — зато как ты встретила меня с радостью…)
+
+Июнь 2023 года. Армия.
+Проводы. Ты плакала, бедненькая… Потом ты приезжала ко мне на присягу. Помнишь, как тебя тошнило от запаха на КПП? Как ты ждала? Мы вечно ругались, но могли сделать этот союз самым счастливым. Потом я снова начал приезжать к тебе… А помнишь, как в первый раз приехал к тебе на Увал? Ох, как ты встречала меня с радостью!
+
+В декабре мы поругались, но как знатно помирились на твой день рождения! Эти изгибы твоего тела — это уже песня, ладно…
+
+Дальше, к сожалению, было только плохое. Но ничего. Мы напишем новую, самую счастливую историю.
+
+До встречи, моя любимая маленькая принцесса.
+Подумай: стоит ли терять меня и не попробовать ещё раз? Сомневаюсь, что нам обоим будет приятно оказаться в других семьях, а не в одной.
+
+Ладно, признаю: я люблю тебя.
+И я знаю важную вещь: ты до сих пор меня любишь, просто стараешься это скрывать.
+
+Я стал взрослее. Я понял, что настоящая любовь — это не только страсть и приключения, а ещё умение прощать, ценить каждую минуту и не бояться начать сначала. Ты — моя самая красивая девочка, которая оказалась единственным мои счастьем. Давай не будем жить прошлым, давай построим будущее. Я жду твоего шага. Один маленький шаг тебя — и я обязательно все изменю и сделаю все только лучше дай шанс.
+
+Твой любимый Михаил.`;
+
+    // ---------- ССЫЛКА НА ВИДЕО (замените на своё) ----------
+    const videoURL = "https://cdn.pixabay.com/video/2022/03/20/113590-693824095_large.mp4";  // ← сюда вставьте ссылку на ваше видео
+
+    // ---------- ПЕЧАТАЮЩИЙСЯ ЗАГОЛОВОК И ОСНОВНОЙ ТЕКСТ ----------
+    let textContainer = document.getElementById('textContainer');
+    let charIndex = 0;
+    let typingInterval = null;
+
+    function typeFirstPart() {
+        if (charIndex < firstPart.length) {
+            textContainer.innerHTML += firstPart[charIndex];
+            charIndex++;
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        } else {
+            clearInterval(typingInterval);
+            insertVideo();
+            setTimeout(() => startTypingSecondPart(), 300);
+        }
+    }
+
+    function insertVideo() {
+        const videoWrapper = document.createElement('div');
+        videoWrapper.className = 'video-wrapper';
+        const video = document.createElement('video');
+        video.src = videoURL;
+        video.controls = true;
+        video.autoplay = false;
+        video.preload = "auto";
+        video.style.width = '100%';
+        videoWrapper.appendChild(video);
+        textContainer.appendChild(videoWrapper);
+        videoWrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function startTypingSecondPart() {
+        charIndex = 0;
+        textContainer.innerHTML += '<br><br>';
+        typingInterval = setInterval(() => {
+            if (charIndex < secondPart.length) {
+                textContainer.innerHTML += secondPart[charIndex];
+                charIndex++;
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            } else {
+                clearInterval(typingInterval);
+            }
+        }, 20);
+    }
+
+    function startTypingFirstPart() {
+        textContainer.innerHTML = '';
+        charIndex = 0;
+        typingInterval = setInterval(typeFirstPart, 20);
+    }
+
+    // Печать заголовка
+    function typeGreeting() {
+        const greetingText = "привет моя маленькая девочка";
+        const greetingEl = document.getElementById('greeting');
+        let i = 0;
+        greetingEl.innerHTML = '';
+        const cursor = document.createElement('span');
+        cursor.className = 'cursor';
+        greetingEl.appendChild(cursor);
+        const interval = setInterval(() => {
+            if (i < greetingText.length) {
+                const charNode = document.createTextNode(greetingText[i]);
+                greetingEl.insertBefore(charNode, cursor);
+                i++;
+            } else {
+                clearInterval(interval);
+                if (cursor.remove) cursor.remove();
+                startTypingFirstPart();
+            }
+        }, 60);
+    }
+
+    // ---------- СМЕНА ФОНА ----------
+    const changeBgBtn = document.getElementById('changeBgBtn');
+    const bgFileInput = document.getElementById('bgFileInput');
+    changeBgBtn.addEventListener('click', () => bgFileInput.click());
+    bgFileInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                document.body.style.background = `url("${e.target.result}") no-repeat center center fixed`;
+                document.body.style.backgroundSize = 'cover';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Запуск
+    typeGreeting();
+</script>
+</body>
+</html>
