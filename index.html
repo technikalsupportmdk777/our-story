@@ -46,7 +46,7 @@
             min-height: 3rem;
         }
 
-        .main-text {
+        .story-content {
             background: rgba(18, 22, 28, 0.7);
             backdrop-filter: blur(8px);
             border-radius: 32px;
@@ -57,6 +57,10 @@
             font-size: 1rem;
             line-height: 1.65;
             color: #e2e8f0;
+        }
+
+        .text-block {
+            margin-bottom: 1em;
             white-space: pre-wrap;
         }
 
@@ -103,7 +107,6 @@
             50% { opacity: 0; }
         }
 
-        /* Кнопка смены фона */
         .bg-changer {
             position: fixed;
             bottom: 20px;
@@ -129,17 +132,16 @@
         <div id="greeting" class="typewriter-title"></div>
     </div>
 
-    <div id="textContainer" class="main-text"></div>
+    <div id="storyContainer" class="story-content"></div>
 
     <div class="footer">💖 Текст печатается на твоих глазах, а видео — наша история</div>
 </div>
 
-<!-- Кнопка для смены фона -->
 <button id="changeBgBtn" class="bg-changer">🎨 Сменить фон</button>
 <input type="file" id="bgFileInput" accept="image/*" style="display: none;">
 
 <script>
-    // ---------- ТЕКСТ ПИСЬМА (РАЗБИТ НА ДВЕ ЧАСТИ) ----------
+    // ---------- ТЕКСТ ПИСЬМА ----------
     const firstPart = `Валерия, моя маленькая принцесса…
 
 Я хочу, чтобы ты сейчас забыла обо всём и просто вспомнила. Вспомнила нас. Ту историю, которая началась в прекрасном сентябре 2022 года.`;
@@ -187,27 +189,43 @@
 
 Твой любимый Михаил.`;
 
-    // ----- ИСПРАВЛЕННАЯ ССЫЛКА НА ВИДЕО -----
+    // Имя вашего видеофайла (лежит в той же папке, что и index.html)
     const videoURL = "photo_5440447224761928166_y_merged_watermarkless_compressed.mp4";
 
-    // ---------- ПЕЧАТАЮЩИЙСЯ ЗАГОЛОВОК И ОСНОВНОЙ ТЕКСТ ----------
-    let textContainer = document.getElementById('textContainer');
-    let charIndex = 0;
+    const storyContainer = document.getElementById('storyContainer');
     let typingInterval = null;
 
-    function typeFirstPart() {
-        if (charIndex < firstPart.length) {
-            textContainer.innerHTML += firstPart[charIndex];
-            charIndex++;
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-        } else {
-            clearInterval(typingInterval);
-            insertVideo();
-            setTimeout(() => startTypingSecondPart(), 300);
-        }
+    // Создаёт пустой блок для текста
+    function createTextBlock() {
+        const block = document.createElement('div');
+        block.className = 'text-block';
+        storyContainer.appendChild(block);
+        return block;
     }
 
-    function insertVideo() {
+    // Печатает текст в указанный блок
+    function typeTextIntoBlock(block, fullText, onComplete) {
+        if (typingInterval) clearInterval(typingInterval);
+        let index = 0;
+        block.innerHTML = '';
+        typingInterval = setInterval(() => {
+            if (index < fullText.length) {
+                block.innerHTML += fullText[index];
+                index++;
+                // Плавная прокрутка вниз, но не слишком часто (каждые 10 символов)
+                if (index % 10 === 0 || index === fullText.length) {
+                    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                }
+            } else {
+                clearInterval(typingInterval);
+                typingInterval = null;
+                if (onComplete) onComplete();
+            }
+        }, 20); // скорость печати (можно увеличить до 25-30 для большей плавности)
+    }
+
+    // Вставка видео после первой части
+    function insertVideo(callback) {
         const videoWrapper = document.createElement('div');
         videoWrapper.className = 'video-wrapper';
         const video = document.createElement('video');
@@ -216,39 +234,41 @@
         video.autoplay = false;
         video.preload = "auto";
         video.style.width = '100%';
-        
         video.onerror = () => {
             const errorMsg = document.createElement('div');
             errorMsg.className = 'video-error';
             errorMsg.innerText = '⚠️ Видео не найдено. Проверьте имя файла.';
             videoWrapper.appendChild(errorMsg);
         };
-        
         videoWrapper.appendChild(video);
-        textContainer.appendChild(videoWrapper);
+        storyContainer.appendChild(videoWrapper);
         videoWrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => {
+            if (callback) callback();
+        }, 500);
     }
 
-    function startTypingSecondPart() {
-        charIndex = 0;
-        textContainer.innerHTML += '<br><br>';
-        typingInterval = setInterval(() => {
-            if (charIndex < secondPart.length) {
-                textContainer.innerHTML += secondPart[charIndex];
-                charIndex++;
-                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-            } else {
-                clearInterval(typingInterval);
-            }
-        }, 20);
+    // Запуск всей истории
+    function startStory() {
+        // 1. Печатаем первую часть
+        const firstBlock = createTextBlock();
+        typeTextIntoBlock(firstBlock, firstPart, () => {
+            // 2. После первой части вставляем видео
+            insertVideo(() => {
+                // 3. Печатаем вторую часть
+                const secondBlock = createTextBlock();
+                // Небольшой отступ для красоты
+                const spacer = document.createElement('div');
+                spacer.style.height = '10px';
+                storyContainer.appendChild(spacer);
+                typeTextIntoBlock(secondBlock, secondPart, () => {
+                    console.log('История полностью напечатана');
+                });
+            });
+        });
     }
 
-    function startTypingFirstPart() {
-        textContainer.innerHTML = '';
-        charIndex = 0;
-        typingInterval = setInterval(typeFirstPart, 20);
-    }
-
+    // Печать заголовка
     function typeGreeting() {
         const greetingText = "привет моя маленькая девочка";
         const greetingEl = document.getElementById('greeting');
@@ -265,12 +285,12 @@
             } else {
                 clearInterval(interval);
                 if (cursor.remove) cursor.remove();
-                startTypingFirstPart();
+                startStory();
             }
         }, 60);
     }
 
-    // ---------- СМЕНА ФОНА ----------
+    // Смена фона
     const changeBgBtn = document.getElementById('changeBgBtn');
     const bgFileInput = document.getElementById('bgFileInput');
     changeBgBtn.addEventListener('click', () => bgFileInput.click());
@@ -286,6 +306,7 @@
         }
     });
 
+    // Запуск
     typeGreeting();
 </script>
 </body>
