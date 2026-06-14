@@ -5,29 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Наша история | Печатное письмо с видео</title>
     <style>
-        /* Полное уничтожение скроллбаров */
+        /* Полное удаление скроллбаров */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
         }
-        html, body {
-            overflow: hidden;         /* запрет прокрутки всей страницы? нет, оставим body auto, но скроллбар скрыт */
-            height: 100%;
-        }
-        body {
-            background: url("bg.jpg") no-repeat center center fixed;
-            background-size: cover;
-            font-family: 'Inter', 'Segoe UI', sans-serif;
-            color: #e2e8f0;
-            padding: 20px;
-            overflow-y: auto;          /* прокрутка есть, но полосы скрыты */
-            overflow-x: hidden;
-            height: auto;
-            min-height: 100vh;
-        }
-        /* Скрываем скроллбар для всех браузеров */
         ::-webkit-scrollbar {
             display: none;
         }
@@ -35,10 +19,23 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+
+        body {
+            background: url("bg.jpg") no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            color: #e2e8f0;
+            padding: 20px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
         .container {
             max-width: 800px;
             margin: 0 auto;
         }
+
         .title-block {
             background: rgba(18, 22, 28, 0.8);
             backdrop-filter: blur(12px);
@@ -58,6 +55,7 @@
             display: inline-block;
             min-height: 3rem;
         }
+
         .story-content {
             background: rgba(18, 22, 28, 0.7);
             backdrop-filter: blur(8px);
@@ -69,10 +67,12 @@
             font-size: 1rem;
             line-height: 1.65;
         }
+
         .text-block {
             margin-bottom: 1em;
             white-space: pre-wrap;
         }
+
         .video-wrapper {
             margin: 30px 0;
             background: #0f111a;
@@ -92,6 +92,7 @@
             color: #e68a2e;
             font-family: monospace;
         }
+
         .footer {
             text-align: center;
             margin-top: 24px;
@@ -99,6 +100,7 @@
             opacity: 0.6;
             font-family: monospace;
         }
+
         .cursor {
             display: inline-block;
             width: 2px;
@@ -112,7 +114,31 @@
             0%, 100% { opacity: 1; }
             50% { opacity: 0; }
         }
-        /* Запрещаем любые трансформации и приближения */
+
+        /* Кнопки навигации */
+        .nav-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #2d3345;
+            border: 1px solid #5a6070;
+            padding: 10px 16px;
+            border-radius: 60px;
+            color: white;
+            font-family: monospace;
+            cursor: pointer;
+            z-index: 1000;
+            transition: 0.1s;
+            font-size: 0.85rem;
+        }
+        .nav-btn:active {
+            transform: scale(0.96);
+        }
+        .to-video-btn {
+            bottom: 80px; /* чуть выше основной кнопки */
+            background: #5a6070;
+        }
+        /* Запрет любых трансформаций */
         img, video, .video-wrapper, .title-block, .story-content {
             transform: none !important;
             transition: none !important;
@@ -127,6 +153,10 @@
     <div id="storyContainer" class="story-content"></div>
     <div class="footer">💖 Текст печатается на твоих глазах, а видео — наша история</div>
 </div>
+
+<!-- Кнопки навигации -->
+<button id="toTopBtn" class="nav-btn" style="display: none;">↑ Наверх</button>
+<button id="toVideoBtn" class="nav-btn to-video-btn" style="display: none;">🎥 К видео</button>
 
 <script>
     const firstPart = `Валерия, моя маленькая принцесса…
@@ -179,6 +209,7 @@
     const videoURL = "photo_5440447224761928166_y_merged_watermarkless_compressed.mp4";
     const storyContainer = document.getElementById('storyContainer');
     let typingInterval = null;
+    let videoElementRef = null; // сохраним ссылку на видео
 
     function createTextBlock() {
         const block = document.createElement('div');
@@ -223,6 +254,7 @@
         };
         videoWrapper.appendChild(video);
         storyContainer.appendChild(videoWrapper);
+        videoElementRef = videoWrapper; // сохраняем для прокрутки
         videoWrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
         setTimeout(() => {
             if (callback) callback();
@@ -239,6 +271,9 @@
                 const secondBlock = createTextBlock();
                 typeTextIntoBlock(secondBlock, secondPart, () => {
                     console.log('История полностью напечатана');
+                    // Показываем кнопки навигации
+                    document.getElementById('toTopBtn').style.display = 'block';
+                    document.getElementById('toVideoBtn').style.display = 'block';
                 });
             });
         });
@@ -264,6 +299,20 @@
             }
         }, 60);
     }
+
+    // Прокрутка к началу страницы
+    document.getElementById('toTopBtn').addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    // Прокрутка к видео
+    document.getElementById('toVideoBtn').addEventListener('click', () => {
+        if (videoElementRef) {
+            videoElementRef.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+            // Если видео ещё не создано, просто прокрутим вверх
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    });
 
     typeGreeting();
 </script>
