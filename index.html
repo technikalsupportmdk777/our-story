@@ -5,9 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
     <title>Наша история | Печатное письмо с видео</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-        /* ФОН ИЗ ВАШЕЙ ФОТОГРАФИИ (загрузите bg.jpg в репозиторий) */
+        /* ===== ФОН ИЗ ВАШЕЙ ФОТОГРАФИИ (bg.jpg) ===== */
         body {
             background: url("bg.jpg") no-repeat center center fixed;
             background-size: cover;
@@ -17,7 +22,10 @@
             min-height: 100vh;
         }
 
-        .container { max-width: 800px; margin: 0 auto; }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
 
         .title-block {
             background: rgba(18, 22, 28, 0.8);
@@ -51,7 +59,10 @@
             line-height: 1.65;
         }
 
-        .text-block { margin-bottom: 1em; white-space: pre-wrap; }
+        .text-block {
+            margin-bottom: 1em;
+            white-space: pre-wrap;
+        }
 
         .video-wrapper {
             margin: 30px 0;
@@ -61,8 +72,17 @@
             border: 1px solid #3a3f50;
             box-shadow: 0 8px 20px rgba(0,0,0,0.3);
         }
-        video { width: 100%; display: block; outline: none; }
-        .video-error { padding: 20px; text-align: center; color: #e68a2e; font-family: monospace; }
+        video {
+            width: 100%;
+            display: block;
+            outline: none;
+        }
+        .video-error {
+            padding: 20px;
+            text-align: center;
+            color: #e68a2e;
+            font-family: monospace;
+        }
 
         .footer {
             text-align: center;
@@ -81,17 +101,23 @@
             vertical-align: middle;
             height: 1.2rem;
         }
-        @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
     </style>
 </head>
 <body>
 <div class="container">
-    <div class="title-block"><div id="greeting" class="typewriter-title"></div></div>
+    <div class="title-block">
+        <div id="greeting" class="typewriter-title"></div>
+    </div>
     <div id="storyContainer" class="story-content"></div>
     <div class="footer">💖 Текст печатается на твоих глазах, а видео — наша история</div>
 </div>
 
 <script>
+    // ---------- ТЕКСТ ПИСЬМА ----------
     const firstPart = `Валерия, моя маленькая принцесса…
 
 Я хочу, чтобы ты сейчас забыла обо всём и просто вспомнила. Вспомнила нас. Ту историю, которая началась в прекрасном сентябре 2022 года.`;
@@ -139,7 +165,9 @@
 
 Твой любимый Михаил.`;
 
+    // Имя видеофайла (лежит в корне репозитория)
     const videoURL = "photo_5440447224761928166_y_merged_watermarkless_compressed.mp4";
+
     const storyContainer = document.getElementById('storyContainer');
     let typingInterval = null;
 
@@ -158,9 +186,12 @@
             if (index < fullText.length) {
                 block.innerHTML += fullText[index];
                 index++;
-                if (index % 10 === 0 || index === fullText.length) window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                if (index % 10 === 0 || index === fullText.length) {
+                    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                }
             } else {
                 clearInterval(typingInterval);
+                typingInterval = null;
                 if (onComplete) onComplete();
             }
         }, 20);
@@ -178,13 +209,15 @@
         video.onerror = () => {
             const errorMsg = document.createElement('div');
             errorMsg.className = 'video-error';
-            errorMsg.innerText = '⚠️ Видео не найдено.';
+            errorMsg.innerText = '⚠️ Видео не найдено. Проверьте имя файла.';
             videoWrapper.appendChild(errorMsg);
         };
         videoWrapper.appendChild(video);
         storyContainer.appendChild(videoWrapper);
         videoWrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        setTimeout(() => callback && callback(), 500);
+        setTimeout(() => {
+            if (callback) callback();
+        }, 500);
     }
 
     function startStory() {
@@ -195,7 +228,9 @@
                 spacer.style.height = '10px';
                 storyContainer.appendChild(spacer);
                 const secondBlock = createTextBlock();
-                typeTextIntoBlock(secondBlock, secondPart, () => {});
+                typeTextIntoBlock(secondBlock, secondPart, () => {
+                    console.log('История полностью напечатана');
+                });
             });
         });
     }
@@ -210,11 +245,12 @@
         greetingEl.appendChild(cursor);
         const interval = setInterval(() => {
             if (i < greetingText.length) {
-                greetingEl.insertBefore(document.createTextNode(greetingText[i]), cursor);
+                const charNode = document.createTextNode(greetingText[i]);
+                greetingEl.insertBefore(charNode, cursor);
                 i++;
             } else {
                 clearInterval(interval);
-                cursor.remove();
+                if (cursor.remove) cursor.remove();
                 startStory();
             }
         }, 60);
