@@ -67,11 +67,18 @@
             overflow: hidden;
             border: 1px solid #3a3f50;
             box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            position: relative;
         }
         video {
             width: 100%;
             display: block;
             outline: none;
+        }
+        .video-error {
+            padding: 20px;
+            text-align: center;
+            color: #e68a2e;
+            font-family: monospace;
         }
 
         .footer {
@@ -180,8 +187,9 @@
 
 Твой любимый Михаил.`;
 
-    // ---------- ССЫЛКА НА ВИДЕО (замените на своё) ----------
-    const videoURL = "https://cdn.pixabay.com/video/2022/03/20/113590-693824095_large.mp4";  // ← сюда вставьте ссылку на ваше видео
+    // ---------- ССЫЛКА НА ВИДЕО (используем локальный файл, загруженный в репозиторий) ----------
+    // Если ваше видео называется не video.mp4, замените на точное имя (например, "myvideo.mp4")
+    const videoURL = "video.mp4";   // ← убедитесь, что файл лежит в корне репозитория
 
     // ---------- ПЕЧАТАЮЩИЙСЯ ЗАГОЛОВОК И ОСНОВНОЙ ТЕКСТ ----------
     let textContainer = document.getElementById('textContainer');
@@ -209,6 +217,16 @@
         video.autoplay = false;
         video.preload = "auto";
         video.style.width = '100%';
+        
+        // Обработка ошибки загрузки видео
+        video.onerror = () => {
+            const errorMsg = document.createElement('div');
+            errorMsg.className = 'video-error';
+            errorMsg.innerText = '⚠️ Видео не найдено. Проверьте имя файла или загрузите видео заново.';
+            videoWrapper.appendChild(errorMsg);
+            console.error('Видео не загрузилось по адресу:', videoURL);
+        };
+        
         videoWrapper.appendChild(video);
         textContainer.appendChild(videoWrapper);
         videoWrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
