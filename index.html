@@ -2,42 +2,43 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Наша история | Печатное письмо с видео</title>
     <style>
-        /* Глобальное скрытие всех скроллбаров */
+        /* Полное уничтожение скроллбаров */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
         }
-
-        /* Убираем полосы прокрутки во всех браузерах */
-        ::-webkit-scrollbar {
-            display: none;
+        html, body {
+            overflow: hidden;         /* запрет прокрутки всей страницы? нет, оставим body auto, но скроллбар скрыт */
+            height: 100%;
         }
-        * {
-            -ms-overflow-style: none;  /* IE и Edge */
-            scrollbar-width: none;     /* Firefox */
-        }
-
-        /* Фон – фиксированный, без анимации, не двигается */
         body {
             background: url("bg.jpg") no-repeat center center fixed;
             background-size: cover;
             font-family: 'Inter', 'Segoe UI', sans-serif;
             color: #e2e8f0;
             padding: 20px;
+            overflow-y: auto;          /* прокрутка есть, но полосы скрыты */
+            overflow-x: hidden;
+            height: auto;
             min-height: 100vh;
-            /* убираем transition, чтобы фон не анимировался */
         }
-
+        /* Скрываем скроллбар для всех браузеров */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        * {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
         .container {
             max-width: 800px;
             margin: 0 auto;
         }
-
         .title-block {
             background: rgba(18, 22, 28, 0.8);
             backdrop-filter: blur(12px);
@@ -57,7 +58,6 @@
             display: inline-block;
             min-height: 3rem;
         }
-
         .story-content {
             background: rgba(18, 22, 28, 0.7);
             backdrop-filter: blur(8px);
@@ -69,12 +69,10 @@
             font-size: 1rem;
             line-height: 1.65;
         }
-
         .text-block {
             margin-bottom: 1em;
             white-space: pre-wrap;
         }
-
         .video-wrapper {
             margin: 30px 0;
             background: #0f111a;
@@ -94,7 +92,6 @@
             color: #e68a2e;
             font-family: monospace;
         }
-
         .footer {
             text-align: center;
             margin-top: 24px;
@@ -102,7 +99,6 @@
             opacity: 0.6;
             font-family: monospace;
         }
-
         .cursor {
             display: inline-block;
             width: 2px;
@@ -115,6 +111,11 @@
         @keyframes blink {
             0%, 100% { opacity: 1; }
             50% { opacity: 0; }
+        }
+        /* Запрещаем любые трансформации и приближения */
+        img, video, .video-wrapper, .title-block, .story-content {
+            transform: none !important;
+            transition: none !important;
         }
     </style>
 </head>
