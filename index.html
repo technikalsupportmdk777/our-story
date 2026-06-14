@@ -187,9 +187,8 @@
 
 Твой любимый Михаил.`;
 
-    // ---------- ССЫЛКА НА ВИДЕО (используем локальный файл, загруженный в репозиторий) ----------
-    // Если ваше видео называется не video.mp4, замените на точное имя (например, "myvideo.mp4")
-    const videoURL = "photo_5440447224761928166_y_merged_watermarkless_compressed.mp4";   // ← убедитесь, что файл лежит в корне репозитория
+    // ----- ИСПРАВЛЕННАЯ ССЫЛКА НА ВИДЕО -----
+    const videoURL = "photo_5440447224761928166_y_merged_watermarkless_compressed.mp4";
 
     // ---------- ПЕЧАТАЮЩИЙСЯ ЗАГОЛОВОК И ОСНОВНОЙ ТЕКСТ ----------
     let textContainer = document.getElementById('textContainer');
@@ -218,13 +217,11 @@
         video.preload = "auto";
         video.style.width = '100%';
         
-        // Обработка ошибки загрузки видео
         video.onerror = () => {
             const errorMsg = document.createElement('div');
             errorMsg.className = 'video-error';
-            errorMsg.innerText = '⚠️ Видео не найдено. Проверьте имя файла или загрузите видео заново.';
+            errorMsg.innerText = '⚠️ Видео не найдено. Проверьте имя файла.';
             videoWrapper.appendChild(errorMsg);
-            console.error('Видео не загрузилось по адресу:', videoURL);
         };
         
         videoWrapper.appendChild(video);
@@ -252,7 +249,6 @@
         typingInterval = setInterval(typeFirstPart, 20);
     }
 
-    // Печать заголовка
     function typeGreeting() {
         const greetingText = "привет моя маленькая девочка";
         const greetingEl = document.getElementById('greeting');
@@ -290,7 +286,6 @@
         }
     });
 
-    // Запуск
     typeGreeting();
 </script>
 </body>
