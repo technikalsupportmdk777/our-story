@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Наша история | Печатное письмо с видео</title>
     <style>
-        /* Полное удаление скроллбаров */
         * {
             margin: 0;
             padding: 0;
@@ -115,7 +114,7 @@
             50% { opacity: 0; }
         }
 
-        /* Кнопки навигации */
+        /* Кнопки навигации (всегда плавают) */
         .nav-btn {
             position: fixed;
             bottom: 20px;
@@ -130,12 +129,13 @@
             z-index: 1000;
             transition: 0.1s;
             font-size: 0.85rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
         .nav-btn:active {
             transform: scale(0.96);
         }
         .to-video-btn {
-            bottom: 80px; /* чуть выше основной кнопки */
+            bottom: 80px;
             background: #5a6070;
         }
         /* Запрет любых трансформаций */
@@ -154,10 +154,7 @@
     <div class="footer">💖 Текст печатается на твоих глазах, а видео — наша история</div>
 </div>
 
-<!-- Кнопки навигации -->
-<button id="toTopBtn" class="nav-btn" style="display: none;">↑ Наверх</button>
-<button id="toVideoBtn" class="nav-btn to-video-btn" style="display: none;">🎥 К видео</button>
-
+<!-- Кнопки навигации будут добавлены скриптом, чтобы гарантировать их появление -->
 <script>
     const firstPart = `Валерия, моя маленькая принцесса…
 
@@ -209,7 +206,19 @@
     const videoURL = "photo_5440447224761928166_y_merged_watermarkless_compressed.mp4";
     const storyContainer = document.getElementById('storyContainer');
     let typingInterval = null;
-    let videoElementRef = null; // сохраним ссылку на видео
+    let videoWrapperElement = null; // будет хранить обёртку видео
+
+    // Создаём кнопки сразу, но скрываем их до окончания печати
+    const toTopBtn = document.createElement('button');
+    toTopBtn.textContent = '↑ Наверх';
+    toTopBtn.className = 'nav-btn';
+    const toVideoBtn = document.createElement('button');
+    toVideoBtn.textContent = '🎥 К видео';
+    toVideoBtn.className = 'nav-btn to-video-btn';
+    document.body.appendChild(toTopBtn);
+    document.body.appendChild(toVideoBtn);
+    toTopBtn.style.display = 'none';
+    toVideoBtn.style.display = 'none';
 
     function createTextBlock() {
         const block = document.createElement('div');
@@ -254,7 +263,7 @@
         };
         videoWrapper.appendChild(video);
         storyContainer.appendChild(videoWrapper);
-        videoElementRef = videoWrapper; // сохраняем для прокрутки
+        videoWrapperElement = videoWrapper; // сохраняем для прокрутки
         videoWrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
         setTimeout(() => {
             if (callback) callback();
@@ -271,9 +280,9 @@
                 const secondBlock = createTextBlock();
                 typeTextIntoBlock(secondBlock, secondPart, () => {
                     console.log('История полностью напечатана');
-                    // Показываем кнопки навигации
-                    document.getElementById('toTopBtn').style.display = 'block';
-                    document.getElementById('toVideoBtn').style.display = 'block';
+                    // Показываем кнопки
+                    toTopBtn.style.display = 'block';
+                    toVideoBtn.style.display = 'block';
                 });
             });
         });
@@ -300,16 +309,14 @@
         }, 60);
     }
 
-    // Прокрутка к началу страницы
-    document.getElementById('toTopBtn').addEventListener('click', () => {
+    // Добавляем обработчики
+    toTopBtn.addEventListener('click', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     });
-    // Прокрутка к видео
-    document.getElementById('toVideoBtn').addEventListener('click', () => {
-        if (videoElementRef) {
-            videoElementRef.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    toVideoBtn.addEventListener('click', () => {
+        if (videoWrapperElement) {
+            videoWrapperElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
         } else {
-            // Если видео ещё не создано, просто прокрутим вверх
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     });
